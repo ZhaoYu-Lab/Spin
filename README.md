@@ -27,35 +27,27 @@ theory), partial order reduced, and swarm search (using arbitrarily many cpus).
 # github下载SPIN包
 # linux SPIN 安装(官方编译版本)
 
-unzip ~/Spin-master.zip  -d ~/spin-master   
-# 本文Spin-master.zip位于家目录
+unzip ~/Spin-master.zip  -d ~/spin-master   # 本文Spin-master.zip位于家目录  
 cd ~/spin-master/Bin  
-gunzip spin651_linux64.gz   
-# 选择一个linux版本解压
+gunzip spin651_linux64.gz   # 选择一个linux版本解压  
 chmod +x spin651_linux64  
 sudo cp spin651_linux64 /usr/local/bin/spin  
 spin -V  
 
 # linux SPIN 安装(自己编译)用官方已经编译好的SPIN，有时候回出现问题，则需要自己编译。
 
-unzip ~/Spin-master.zip  -d ~/spin-master   
-# 本文Spin-master.zip位于家目录
+unzip ~/Spin-master.zip  -d ~/spin-master   # 本文Spin-master.zip位于家目录  
 cd ~/spin-master/Src  
-sudo apt-get install byacc   
-# 安装byacc
-sudo apt-get install gcc   
-# 安装gcc
-make   
-# 编译后出现spin文件
+sudo apt-get install byacc   # 安装byacc  
+sudo apt-get install gcc   # 安装gcc  
+make   # 编译后出现spin文件  
 sudo cp ./spin /usr/local/bin/spin  
 spin -V  
 
 # linux ISPIN(linux的SPIN图形化工具) 安装
 
 cd ~/spin-master/optional_gui  
-sudo apt-get isntall tk   
-# 安装依赖
+sudo apt-get isntall tk   # 安装依赖  
 chmod +x ./ispin.tcl  
 sudo cp ispin.tcl /usr/local/bin/ispin  
-ispin   
-# 打开ispn 
+ispin   # 打开ispn   
