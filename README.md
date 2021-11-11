@@ -25,8 +25,8 @@ breadth-first, parallel/multi-core, bounded depth, bitstate search (using Bloom 
 theory), partial order reduced, and swarm search (using arbitrarily many cpus).
 
 # github下载SPIN包
-# linux SPIN 安装(官方编译版本)
-
+# linux SPIN 安装(官方编译版本)  
+下载以上所有文件  
 unzip ~/Spin-master.zip  -d ~/spin-master   # 本文Spin-master.zip位于家目录  
 cd ~/spin-master/Bin  
 gunzip spin651_linux64.gz   # 选择一个linux版本解压  
