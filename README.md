@@ -51,3 +51,5 @@ sudo apt-get isntall tk   # 安装依赖
 chmod +x ./ispin.tcl  
 sudo cp ispin.tcl /usr/local/bin/ispin  
 ispin   # 打开ispn   
+
+#  windows SPIN 安装
