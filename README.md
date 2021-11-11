@@ -52,4 +52,26 @@ chmod +x ./ispin.tcl
 sudo cp ispin.tcl /usr/local/bin/ispin  
 ispin   # 打开ispn   
 
-#  windows SPIN 安装
+# windows10 SPIN 安装  
+配置gcc（c编译环境）  
+即安装Mingw-w64  
+https://www.cygwin.com/  
+结束后打开命令行，输入gcc -v  
+配置Tcl开发环境  
+https://www.activestate.com/products/tcl/  
+之后会跳转到登陆界面，推荐选择Github账号直接登录。登录后选择下载Windows平台x64版本  
+安装SPIN  
+在Spin官网说明文档页中，根据2b.项中的描述，其实基本可以成功安装并运行Spin，但其中存在措辞模糊，版本陈旧等问题。  
+在老版本中，spin.exe可以直接从单独的下载页获取，xspin.tcl同样，但自Spin 6.50版本后，Spin的所有文件统一托管在Github代码仓库上，且未对使用方法作详细说明，给许多人造成了不小的困扰。  
+首先从Spin项目代码仓库下载源码到本地。将压缩包解压，路径尽量不含中文。  
+找到源码目录下的Bin目录，根据系统版本选择对应压缩包解压，此处我选择“spin651_windows64.exe.gz”。  
+解压后得到可执行文件“spin651_windows64.exe”，将其重命名为“spin.exe”  
+之后打开配置环境变量。依次点击“高级系统设置”、“系统变量”，点选用户变量下的Path，选择下方的编辑，将上文提及的Bin目录的路径加入其中  
+为验证spin.exe是否正确添加，可在命令行中输入spin --help  
+
+运行可视化交互界面ispin.tcl  
+
+在老版本中，Windows系统下的可视化交互界面使用的是xspin.tcl，而自6.50版本后，Windows系统下使用ispin.tcl进行可视化交互。  
+打开源码目录下的“optional_gui”目录，若上述gcc、ActiveTcl和spin.exe均已正确配置，则可双击目录下的“ispin.tcl”文件，打开如下可视化交互界面。  
+至此，安装完成  
+
