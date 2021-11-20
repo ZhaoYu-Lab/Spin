@@ -1,0 +1,137 @@
+
+
+/*
+CSDN https://blog.csdn.net/jmh1996/article/details/86549565?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-2.no_search_link&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-2.no_search_link
+
+
+利用SPIN进行模型检测 将该文件重命名为pml文件 放入Myfiles文件夹下运行即可
+
+使用SPIN和SMV解决农夫过河问题
+
+农夫过河的模型检测
+
+一个人带着狼、山羊和白菜在一条河的左岸，有一条船，大小正好能装下这个人和其它三者之一，人和他的随行物都要带过岸，但他每次只能带一样东西摆渡过河。如人将狼和羊留在同一岸，无人照顾，那么狼会把羊吃掉。同样，如果羊和白菜在同一岸，无人照顾，那么羊会吃了白菜。
+
+有限状态机描述 见网址或者看书本
+
+Promela语言的表述如下：
+
+
+*/
+
+	//定义河的两岸 
+    
+	mtype={original_side,destination_side}   
+
+	//将农夫、白菜、羊、狼初始化在原岸边
+    
+	mtype ferryman=original_side, cabbage=original_side, goat=original_side, wolf=original_side; 
+
+    
+	// 实现swap_side部分，这是一个inline函数，它不是一个进程，但是可以传递参数。它表示把参数 loc从一边运到另外一边 
+    
+	inline swap_side(loc)
+	{
+		if
+    	
+			:: loc == original_side -> loc = destination_side
+    	
+			:: else -> loc = original_side
+    	
+		fi
+	}
+
+	// 接着实现携带物品过河的函数carry(object).注意里面是一个atomic语句。之所以用atomic是为了表达携带物品过河的动作要么人和物品一起过河，要么都不过河。
+    
+	inline carry(object)		
+	{
+		atomic{
+    	
+		swap_side(ferryman);
+    	
+		swap_side(object);
+    	
+		}
+	}
+
+	// carry_nothing用于表示人空手过河
+	
+	inline carry_nothing()
+	{
+		atomic
+		{
+			swap_side(ferryman);
+		}
+	}
+
+	// cross_river进程才是关键
+
+	proctype cross_river()
+	{
+		do
+		:: carry_nothing()
+		:: ferryman==goat -> carry(goat)
+		:: ferryman==wolf -> carry(wolf)
+		:: ferryman==cabbage -> carry(cabbage)
+		od
+	}
+
+	//
+
+	init
+	{
+		run cross_river();
+	}
+    
+// 安全过河条件
+// GOAL表示最终的目标，人和羊和白菜和狼都过河
+// COND表示需要满足的条件：如果狼和羊在一起，那么人就必须得和他们在一起；同时羊和白菜在一起，那么人必须也得和羊在一起
+
+
+
+
+//下面的会出现反例
+#define GOAL ((ferryman==destination_side) && (wolf==destination_side) && (goat==destination_side) && (cabbage==destination_side))
+        
+#define COND (((wolf==goat) -> (ferryman == wolf)) && ((goat==cabbage) -> (ferryman == goat)))
+        
+ltl nice {!(COND U GOAL)}
+
+/*
+
+SPIN里面的性质都是使用宏来定义的。GOAL表示最终的目标，人和羊和白菜和狼都过河。
+COND表示需要满足的条件：如果狼和羊在一起，那么人就必须得和他们在一起；同时羊和白菜在一起，那么人必须也得羊在一起。
+ltl nice xxx则是用ltl的语法写了这个约束。
+
+模型检测结果
+
+我们使用iSPIN图形化界面来检测模型。
+SPIN会在性质前面自动添加一个Never来寻找一条不满足的路径,
+表示不存在那么一条路径使用到达目标前满足我们写的安全条件。
+可以看到，在Verification 部分，SPIN检测到了一条可行路径。
+
+过河路径
+
+SPIN输出的过河路径比较长，主要是SPIN会有很多的农夫不携带任何物品而在河的两岸空转。我们把这些空转的路径给人工过滤掉即可得到一条简化的路径。
+1. 船上先运输羊和人，这样goat=destination_side,ferrymen=destination_side
+2. 人在单独过河，这样ferrymen=original_side
+3. 人和菜带过河，这样ferrymen=destination_side,goat=destination_side,
+cabbage=destination_side.
+4. 人把羊带过河，这样ferrymen=original_side,goat=original_side;
+5. 人把狼带过河，这样ferrymen=destination_side,wolf=destination_side
+6. 人再单独过河，这样ferrymen=original_side
+7. 最后，人带着羊一起过河。然后就全部安全过河了。
+
+
+
+*/
+
+
+
+	
+
+
+
+
+
+
