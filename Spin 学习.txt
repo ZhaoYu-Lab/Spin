@@ -1,0 +1,68 @@
+
+
+/*
+百度文库 https://wenku.baidu.com/view/0f7a2c4b0b4c2e3f572763e6.html
+spin windows安装教程以及使用教程
+
+利用SPIN进行模型检测 将该文件命名为mutex.pml 放入Myfiles文件夹下即可运行
+
+互斥协议的模型检测
+互斥协议是指两个进程共享一个临界区(critical),任何时间只能有一个进程占用临界区。
+互斥协议的Promela语言的正确表述如下：
+*/
+
+byte sem = 1; //占用信号： 0表示临界区被占用
+byte critical = 0; //临界区： n表示临界区被n人占用
+
+#define sss (sem > 0)
+#define mutex (critical <= 1) //要求检验
+
+active proctype P1(){
+	do:: 
+		atomic{sem > 0; sem--;}
+		critical++; //进程P1占用临界区
+		critical--; //进程P1退出临界区
+		sem++; //释放占用信号
+	od
+
+}
+active proctype P2(){
+	do:: 
+		atomic{sem > 0; sem--;}
+		critical++; //进程P2占用临界区
+		critical--; //进程P2退出临界区
+		sem++; //释放占用信号
+	od
+
+}
+
+// 对该模型 建立如下LTL检验条件：
+
+ltl e1{<>mutex} //未来存在一种情况，最多一个人占用临界区  <>==菱形==终将
+ltl e2{!<>mutex} //未来临界区总是有多个用户占用 
+ltl e3{<>!mutex} //未来存在一种状态，临界区有多个用户占用
+ltl e4{[]mutex} //临界区总是最多只有一个用户  []==方框==总是
+ltl e5{![]mutex} //未来存在一种状态 临界区有多个用户占用 跟e3等价
+ltl e6{[]!mutex} //临界区总是有多个用户，跟e2等价
+ltl e7{!sss->[]mutex} //如果临界区被占用， 则临界条件成立
+
+
+/*
+
+点击 use claim  在下面输入 e1---e6 即可检验 建立的模型是否满足 e1至e6表示的规约 
+
+不满足规约会报错 并输出反例
+
+最终验证应该返回一个错误序列，窗口底部显示 建议从 Simulate/Replay 面板重放错误跟踪。调出该选项卡并确保选择了Guided simulation（引导模拟只能针对验证者之前生成的错误序列进行）Perform the guided simulation，现在将重放发现的错误序列。
+
+*/
+
+
+
+	
+
+
+
+
+
+
